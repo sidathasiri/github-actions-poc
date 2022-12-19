@@ -1,0 +1,17 @@
+name: pr-checks
+run-name: ${{ github.actor }} is running pr checks
+on: [push]
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm install
+  build:
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm run build
