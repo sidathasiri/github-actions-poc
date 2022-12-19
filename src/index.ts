@@ -1,1 +1,5 @@
-export const sum = (x: number, y: number): number => (x + y);
+import app from './server';
+
+app.listen(3000, () => {
+    console.log('Server started!');
+})
