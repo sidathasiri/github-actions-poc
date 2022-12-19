@@ -10,8 +10,4 @@ jobs:
         with:
           node-version: '18'
       - run: npm install
-  build:
-    needs: init
-    runs-on: ubuntu-latest
-    steps:
       - run: npm run build
