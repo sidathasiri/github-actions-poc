@@ -31,15 +31,15 @@ jobs:
         run: npm run test:unit
   run-integration-tests:
     needs: build
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v3
-        - name: Set up Node
-          uses: actions/setup-node@v3
-          with:
-            node-version: '18'
-        - name: Install dependencies
-          run: npm install
-        - name: Integration tests
-          run: npm run test:integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Integration tests
+        run: npm run test:integration
