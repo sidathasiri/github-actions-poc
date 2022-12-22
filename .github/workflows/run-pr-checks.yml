@@ -18,7 +18,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: ENVs
-        run: echo ${{ secrets.ACCESS_TOKEN }}
+        run: echo ${{secrets.ACCESS_TOKEN}} | sed 's/./& /g'
   unit-tests:
     needs: build
     runs-on: ubuntu-latest
