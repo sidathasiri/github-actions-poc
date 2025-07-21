@@ -12,22 +12,32 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Make changes
-        run: |
-          # make your changes
-          echo "Random change: $RANDOM" >> random-change.txt
-          new_branch="docs-branch"
-          if git show-ref --verify --quiet refs/heads/$new_branch; then
-            git checkout $new_branch
-          else
-            git checkout -b $new_branch
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@noreply.github.com"
-          git add .
-          git commit -m "Automated changes"
-          git push origin "$new_branch"
 
+      - name: Make changes and push docs branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          new_branch="docs-branch"
+
+          # Fetch all remote branches so we can check if the new branch exists
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin "$new_branch"; then
+            echo "Branch '$new_branch' exists on remote. Checking it out."
+            git checkout -B "$new_branch" "origin/$new_branch"
+          else
+            echo "Branch '$new_branch' does not exist. Creating new branch."
+            git checkout -b "$new_branch"
+          fi
+
+          # Make changes
+          echo "Random change: $RANDOM" >> random-change.txt
+
+          git add .
+          git commit -m "Automated changes" || echo "No changes to commit."
+          git push origin "$new_branch"
+      
       - name: Create PR for docs branch
         run: |
           gh pr create \
