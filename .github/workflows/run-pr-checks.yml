@@ -16,12 +16,13 @@ jobs:
         run: |
           # make your changes
           echo "Random change: $RANDOM" >> random-change.txt
-          git checkout -b docs-branch
+          new_branch="docs-branch"
+          git checkout -b $new_branch
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@noreply.github.com"
           git add .
           git commit -m "Automated changes"
-          git push origin "$branch_name"
+          git push origin "$new_branch"
 
       - name: Create PR for docs branch
         run: |
