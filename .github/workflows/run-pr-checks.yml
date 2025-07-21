@@ -47,6 +47,8 @@ jobs:
           git add .
           git commit -m "Automated changes" || echo "No changes to commit."
           git push origin "$new_branch"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create PR for docs branch
         run: |
