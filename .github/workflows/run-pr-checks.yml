@@ -15,7 +15,11 @@ jobs:
           echo "Random change: $RANDOM" >> random-change.txt
           current_branch=${{ github.head_ref }}
           branch_name="$current_branch-docs"
-          git checkout -b "$branch_name"
+          if git show-ref --verify --quiet refs/heads/$branch_name; then
+            git checkout "$branch_name"
+          else
+            git checkout -b "$branch_name"
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@noreply.github.com"
           git add .
