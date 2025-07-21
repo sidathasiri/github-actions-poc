@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is running pr checks
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
 jobs:
   build:
     runs-on: ubuntu-latest
