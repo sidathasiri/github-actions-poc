@@ -18,7 +18,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          new_branch="docs-branch"
+          # Get the last merged PR number
+          last_pr_number=$(gh pr list --state merged --json number --jq '.[0].number')
+          if [ -z "$last_pr_number" ]; then
+            echo "No merged PRs found. Exiting."
+            exit 1
+          fi
+
+          new_branch="pr-$last_pr_number-docs-update"
+
+          # Export the new branch name for later steps
+          echo "new_branch=$new_branch" >> $GITHUB_ENV
 
           # Fetch all remote branches so we can check if the new branch exists
           git fetch origin
@@ -37,13 +47,13 @@ jobs:
           git add .
           git commit -m "Automated changes" || echo "No changes to commit."
           git push origin "$new_branch"
-      
+
       - name: Create PR for docs branch
         run: |
-          existing_pr=$(gh pr list --head "docs-branch" --base master --json number --jq '.[0].number')
+          existing_pr=$(gh pr list --head "$new_branch" --base master --json number --jq '.[0].number')
           if [ -z "$existing_pr" ]; then
             gh pr create \
-              --head "docs-branch" \
+              --head "$new_branch" \
               --base master \
               --title "Automated PR for documentation updates" \
               --body "This PR was created automatically from branch \`$current_branch\`." \
