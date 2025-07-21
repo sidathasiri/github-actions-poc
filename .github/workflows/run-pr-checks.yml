@@ -16,16 +16,24 @@ jobs:
           current_branch=${{ github.head_ref }}
           branch_name="$current_branch-docs"
           git checkout -b "$branch_name"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@noreply.github.com"
+          # git config user.name "github-actions[bot]"
+          # git config user.email "github-actions[bot]@noreply.github.com"
           git add .
           git commit -m "Automated changes"
           git push origin "$branch_name"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create PR
+      - name: Create PR for docs branch
         run: |
           current_branch=${{ github.head_ref }}
-          branch_name="$current_branch-docs"
-          gh pr create --base main --head "$branch_name" --title "Automated PR for documentation updates" --body "This PR was created by a workflow" --assignee "${{ github.actor }}"
+          new_branch="${current_branch}-docs"
+
+          gh pr create \
+            --base main \
+            --head "$new_branch" \
+            --title "Automated PR for documentation updates" \
+            --body "This PR was created by a workflow." \
+            --assignee "${{ github.actor }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
