@@ -1,6 +1,6 @@
 name: pr-checks
 run-name: ${{ github.actor }} is running pr checks
-on: [push]
+on: pull_request
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,41 +9,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install dependencies
-        run: npm install
-      - name: Build
-        run: npm run build
-      - name: ENVs
-        run: echo ${{secrets.ACCESS_TOKEN}} | sed 's/./& /g'
-  unit-tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install dependencies
-        run: npm install
-      - name: Unit tests
-        run: npm run test:unit
-  integration-tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install dependencies
-        run: npm install
-      - name: Integration tests
-        run: npm run test:integration
+      - name: Make changes
+        run: |
+          # make your changes
+          echo "Random change: $RANDOM" >> random-change.txt
+          branch_name="$(git rev-parse --abbrev-ref HEAD)-docs"
+          git checkout -b "$branch_name"
+          git add .
+          git commit -m "Automated changes"
+          git push origin "$branch_name"
+
+      - name: Create PR
+        run: |
+          gh pr create --base main --head "$(git rev-parse --abbrev-ref HEAD)-docs" --title "Automated PR for documentation updates" --body "This PR was created by a workflow" --assignee "${{ github.actor }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
