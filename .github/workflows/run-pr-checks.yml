@@ -57,8 +57,8 @@ jobs:
             gh pr create \
               --head "$new_branch" \
               --base master \
-              --title "Automated PR for documentation updates" \
-              --body "This PR was created automatically from branch \`$current_branch\`." \
+              --title "Automated Documentation Update for branch $new_branch" \
+              --body "This PR updates the documentation based on the latest changes in branch \`$new_branch\`. It includes automated updates to ensure the documentation remains up-to-date." \
               --assignee "${{ github.actor }}"
           else
             echo "Pull request already exists: #$existing_pr. Skipping creation."
