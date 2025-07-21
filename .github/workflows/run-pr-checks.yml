@@ -13,7 +13,7 @@ jobs:
         run: |
           # make your changes
           echo "Random change: $RANDOM" >> random-change.txt
-          current_branch="${GITHUB_REF##*/}"
+          current_branch=${{ github.head_ref }}
           branch_name="$current_branch-docs"
           git checkout -b "$branch_name"
           git config user.name "github-actions[bot]"
@@ -24,7 +24,7 @@ jobs:
 
       - name: Create PR
         run: |
-          current_branch="${GITHUB_REF##*/}"
+          current_branch=${{ github.head_ref }}
           branch_name="$current_branch-docs"
           gh pr create --base main --head "$branch_name" --title "Automated PR for documentation updates" --body "This PR was created by a workflow" --assignee "${{ github.actor }}"
         env:
