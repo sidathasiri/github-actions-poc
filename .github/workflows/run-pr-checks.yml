@@ -26,13 +26,11 @@ jobs:
 
       - name: Create PR for docs branch
         run: |
-          current_branch=${{ github.head_ref }}
-          new_branch="${current_branch}-docs"
-
           gh pr create \
-            --base main \
-            --title "Automated PR for documentation updates" \
-            --body "This PR was created by a workflow." \
-            --assignee "${{ github.actor }}"
+          --head "docs-branch" \
+          --base master \
+          --title "Automated PR for documentation updates" \
+          --body "This PR was created automatically from branch \`$current_branch\`." \
+          --assignee "${{ github.actor }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
